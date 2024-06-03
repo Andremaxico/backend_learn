@@ -2,5 +2,11 @@
   "dependencies": {
     "express": "^4.19.2",
     "serve-favicon": "^2.5.0"
-  }
+  },
+  "name": "start",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:Andremaxico/backend_learn.git",
+  "author": "<andremaxico321@gmail.com>",
+  "license": "MIT"
 }
