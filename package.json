@@ -5,7 +5,8 @@
   },
   "scripts": {
     "watch": "tsc -w",
-    "dev": "nodemon ./dist/index.js"
+    "dev": "nodemon ./dist/index.js",
+    "build": "tsc"
   },
   "name": "start",
   "version": "1.0.0",
