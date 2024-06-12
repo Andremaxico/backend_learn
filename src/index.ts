@@ -80,7 +80,7 @@ app.delete('/pupils/:id', (req, res) => {
         return;
     }
 
-    res.sendStatus(HTTP_STATUSES.CREATED);
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT);
 });
 
 app.put('/pupils/:id', (req, res) => {
