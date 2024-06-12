@@ -1,13 +1,13 @@
 import express from 'express';
 
-const app = express();
+export const app = express();
 
 const reqBodyMiddleware = express.json();
 app.use(reqBodyMiddleware);
 
 const port = 3030;
 
-const httpStatuses = {
+export const HTTP_STATUSES = {
     OK: 200,
     CREATED: 201,
     NO_CONTENT: 204,
@@ -16,19 +16,32 @@ const httpStatuses = {
     BAD_REQUEST: 400,
 }
 
-const db = {
-    pupils: [
-        {id: 1, name: 'Andrii'},
-        {id: 2, name: 'Sasha'},
-        {id: 3, name: 'Dmytro'},
-        {id: 4, name: 'Vadym'},
-    ]
+// const db = {
+//     pupils: [
+//         {id: 1, name: 'Andrii'},
+//         {id: 2, name: 'Sasha'},
+//         {id: 3, name: 'Dmytro'},
+//         {id: 4, name: 'Vadym'},
+//     ]
+// }
+
+export type Pupil = {
+    name: string, 
+    id: number,
+}
+
+type DB = {
+    pupils: Pupil[],
+}
+
+const db: DB = {
+    pupils: [],
 }
 
 app.get('/pupils', (req, res) => {
     let foundPupils = db.pupils;
 
-    if(req.query.name) {
+    if(req.query.name && foundPupils.length > 0) {
         foundPupils = foundPupils.filter(pupil => pupil.name.indexOf(req.query.name as string) > -1)
     }
 
@@ -37,7 +50,7 @@ app.get('/pupils', (req, res) => {
 
 app.post('/pupils', (req, res) => {
     if(!req.body.name || req.body.name.trim().length < 1){
-        res.sendStatus(httpStatuses.BAD_REQUEST);
+        res.sendStatus(HTTP_STATUSES.BAD_REQUEST);
         return;
     }
 
@@ -50,7 +63,7 @@ app.post('/pupils', (req, res) => {
 
     db.pupils.push(newPupil);
 
-    res.status(httpStatuses.CREATED).json(newPupil);
+    res.status(HTTP_STATUSES.CREATED).json(newPupil);
 })
 app.delete('/pupils/:id', (req, res) => {
     if(!req.params.id) {
@@ -63,23 +76,23 @@ app.delete('/pupils/:id', (req, res) => {
     db.pupils = db.pupils.filter(pupil => pupil.id !== +req.params.id);
 
     if(db.pupils.length === beforeDelLength) {
-        res.sendStatus(httpStatuses.NOT_FOUND);
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND);
         return;
     }
 
-    res.sendStatus(httpStatuses.NO_CONTENT);
+    res.sendStatus(HTTP_STATUSES.CREATED);
 });
 
 app.put('/pupils/:id', (req, res) => {
     if(!req.params.id || !req.body.name || req.body.name.trim().length < 1){
-        res.sendStatus(httpStatuses.BAD_REQUEST);
+        res.sendStatus(HTTP_STATUSES.BAD_REQUEST);
         return;
     }
 
     const changedPupil = db.pupils.find(pupil => pupil.id === +req.params.id);
 
     if(!changedPupil) {
-        res.sendStatus(httpStatuses.NOT_FOUND);
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND);
         return;
     }
 
@@ -92,7 +105,13 @@ app.put('/pupils/:id', (req, res) => {
     db.pupils[changedIdx] = {...newPupil}; 
     console.log(req.body.name);
 
-    res.status(httpStatuses.CREATED).json(newPupil);
+    res.status(HTTP_STATUSES.CREATED).json(newPupil);
+})
+
+app.delete('/pupils', (req, res) => {
+    db.pupils = [];
+
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT);
 })
 
 app.listen(port, () => {
