@@ -1,5 +1,6 @@
 import request from "supertest";
-import { app, HTTP_STATUSES, Pupil }  from '../../src/index';
+import { app, HTTP_STATUSES, PupilType }  from '../../src/index';
+import { InputPupilModel } from "../../src/models/InputPupilModel";
 
 describe('all endpoints', () => {
     beforeAll( async () => {
@@ -18,30 +19,32 @@ describe('all endpoints', () => {
             .send({name: ''})
             .expect(HTTP_STATUSES.BAD_REQUEST);
         
-        //check that object is not added to db
+        //check that object is not added to DBType
         await request(app)
             .get('/pupils')
             .expect(HTTP_STATUSES.OK, [])
     });
 
-    let createdUserData: null | Pupil = null;
+    let createdUserData: null | PupilType = null;
 
 
 
     it('should return 201 status after adding', async () => {
+        const data: InputPupilModel = {name: 'Solomon'};
+
         const response = await request(app)
             .post('/pupils')
-            .send({name: 'Solomon'})
+            .send(data)
             .expect(HTTP_STATUSES.CREATED)
 
         createdUserData = response.body;
 
         expect(createdUserData).toEqual({
-            name: 'Solomon',
+            name: data.name,
             id: expect.any(Number)
         });
 
-        //check is post addded to db
+        //check is post addded to DBType
         await request(app)
             .get('/pupils')
             .expect(HTTP_STATUSES.OK, [createdUserData])
@@ -53,8 +56,10 @@ describe('all endpoints', () => {
             .expect(HTTP_STATUSES.NOT_FOUND);
     })
 
-    let createdUser2Data: null | Pupil = null;
-    it('should add another pupil', async () => {
+    let createdUser2Data: null | PupilType = null;
+    it('should add another PupilType', async () => {
+        const data: InputPupilModel = {name: 'Maria'};
+
         const response = await request(app)
             .post('/pupils')
             .send({name: 'Maria'})
@@ -63,11 +68,11 @@ describe('all endpoints', () => {
         createdUser2Data = response.body;
 
         expect(createdUser2Data).toEqual({
-            name: 'Maria',
+            name: data.name,
             id: expect.any(Number)
         });
 
-        //check is post addded to db
+        //check is post addded to DBType
         await request(app)
             .get('/pupils')
             .expect(HTTP_STATUSES.OK, [createdUserData, createdUser2Data])
@@ -78,7 +83,7 @@ describe('all endpoints', () => {
             .delete(`/pupils/${createdUser2Data?.id}`)
             .expect(HTTP_STATUSES.NO_CONTENT)
 
-        //check is deleted from db
+        //check is deleted from DBType
         await request(app)
             .get('/pupils')
             .expect(HTTP_STATUSES.OK, [createdUserData]);
@@ -90,52 +95,55 @@ describe('all endpoints', () => {
             .expect(HTTP_STATUSES.NOT_FOUND)
     })
 
-    it('should update pupil', async () => {
+    it('should update PupilType', async () => {
+        const data: InputPupilModel = {
+            name: 'Solomon2222'
+        };
+
         const response = await request(app)
             .put(`/pupils/${createdUserData?.id}`)
-            .send({
-                id: createdUserData?.id,
-                name: 'Solomon2222'
-            });
+            .send(data);
         
         createdUserData = response.body;
 
         expect(createdUserData).toEqual({
-            name: 'Solomon2222',
+            name: data.name,
             id: createdUserData?.id
         });
 
-        //check is changed in db
+        //check is changed in DBType
         await request(app)
             .get('/pupils')
             .expect(HTTP_STATUSES.OK, [createdUserData]);
     })
 
-    it('should not update pupil with incorrect data', async () => {
+    it('should not update PupilType with incorrect data', async () => {
+        const data: InputPupilModel = {
+            name: ''
+        };
+
         await request(app)
             .put(`/pupils/${createdUserData?.id}`)
-            .send({
-                id: createdUserData?.id,
-                name: ''
-            })
+            .send(data)
             .expect(HTTP_STATUSES.BAD_REQUEST)
 
-        //check is not changed in db
+        //check is not changed in DBType
         await request(app)
             .get('/pupils')
             .expect(HTTP_STATUSES.OK, [createdUserData]);
     })
 
-    it('should not update pupil with wrong id', async () => {
+    it('should not update PupilType with wrong id', async () => {
+        const data: InputPupilModel = {
+            name: 'Solomon2222'
+        };
+
         await request(app)
             .put(`/pupils/-111`)
-            .send({
-                id: createdUserData?.id,
-                name: 'Solomon2222'
-            })
+            .send(data)
             .expect(HTTP_STATUSES.NOT_FOUND)
 
-        //check is not changed in db
+        //check is not changed in DBType
         await request(app)
             .get('/pupils')
             .expect(HTTP_STATUSES.OK, [createdUserData]);
