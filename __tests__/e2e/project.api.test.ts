@@ -1,6 +1,8 @@
 import request from "supertest";
-import { app, HTTP_STATUSES, PupilType }  from '../../src/index';
 import { InputPupilModel } from "../../src/models/InputPupilModel";
+import { app } from "../../src/app";
+import { PupilType } from "../../src/types";
+import { HTTP_STATUSES } from "../../src/constants";
 
 describe('all endpoints', () => {
     beforeAll( async () => {
@@ -95,7 +97,7 @@ describe('all endpoints', () => {
             .expect(HTTP_STATUSES.NOT_FOUND)
     })
 
-    it('should update PupilType', async () => {
+    it('should update pupil', async () => {
         const data: InputPupilModel = {
             name: 'Solomon2222'
         };
@@ -117,7 +119,7 @@ describe('all endpoints', () => {
             .expect(HTTP_STATUSES.OK, [createdUserData]);
     })
 
-    it('should not update PupilType with incorrect data', async () => {
+    it('should not update pupil with incorrect data', async () => {
         const data: InputPupilModel = {
             name: ''
         };
@@ -133,9 +135,9 @@ describe('all endpoints', () => {
             .expect(HTTP_STATUSES.OK, [createdUserData]);
     })
 
-    it('should not update PupilType with wrong id', async () => {
+    it('should not update pupil with wrong id', async () => {
         const data: InputPupilModel = {
-            name: 'Solomon2222'
+            name: 'Solomon22225'
         };
 
         await request(app)
@@ -158,5 +160,11 @@ describe('all endpoints', () => {
         await request(app)
             .get('/pupils')
             .expect(HTTP_STATUSES.OK, [])
+    })
+
+    it('should return text when requesting all schools', async () => {
+        await request(app)
+            .get('/schools')
+            .expect(HTTP_STATUSES.OK, '"[]"');
     })
 })
