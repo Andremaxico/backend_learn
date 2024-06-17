@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "express": "^4.19.2",
+    "express-validator": "^7.1.0",
     "serve-favicon": "^2.5.0"
   },
   "scripts": {
@@ -26,5 +27,6 @@
     "ts-jest": "^29.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
-  }
+  },
+  "packageManager": "yarn@4.3.0"
 }

@@ -91,6 +91,12 @@ describe('all endpoints', () => {
             .expect(HTTP_STATUSES.OK, [createdUserData]);
     })
 
+    it('shout return 400 status with text id when deleting', async () => {
+        await request(app)
+            .delete('/pupils/ididi')
+            .expect(HTTP_STATUSES.BAD_REQUEST);
+    })
+
     it('should not delete not existing user', async () => {
         await request(app)
             .delete('/pupils/-111')
