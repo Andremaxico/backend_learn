@@ -2,10 +2,12 @@ import { db } from "../db";
 import { PupilType } from "../types";
 
 export const pupilsRepository = {
-    findPupilsByName(name: string | null): PupilType[] {
-        let foundPupils = db.pupils;
+    async findPupilsByName(name: string | null): Promise<PupilType[]> {
+        let foundPupils = db.collection('pupils');
 
-        if(name && foundPupils.length > 0) {
+        console.log('found Pupils', foundPupils);
+
+        if(name && foundPupils. > 0) {
             foundPupils = foundPupils.filter(pupil => pupil.name.indexOf(name) > -1)
         }
 
@@ -14,12 +16,12 @@ export const pupilsRepository = {
         return foundPupils;
     },
 
-    findPupilById(id: number): PupilType | null {
+    async findPupilById(id: number): Promise<PupilType | null> {
         const foundPupil = db.pupils.find(pupil => pupil.id === id) || null;
         return foundPupil;
     },  
 
-    createPupil(name: string): PupilType {
+    async createPupil(name: string): Promise<PupilType> {
         const newPupil: PupilType = {
             id: new Date().getTime(),
             name: name,
@@ -31,7 +33,7 @@ export const pupilsRepository = {
         return newPupil;
     },
 
-    removePupil(id: number): boolean {
+    async removePupil(id: number): Promise<boolean> {
         const beforeDelLength = db.pupils.length;
 
         db.pupils = db.pupils.filter(pupil => pupil.id !== id);
@@ -39,7 +41,7 @@ export const pupilsRepository = {
         return db.pupils.length < beforeDelLength;
     },
 
-    updatePupil(id: number, name: string): boolean {
+    async updatePupil(id: number, name: string): Promise<boolean> {
         const updatingPupil = db.pupils.find(pupil => pupil.id === id);
 
         if(!updatingPupil) {

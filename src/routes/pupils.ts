@@ -18,16 +18,16 @@ const getPupilViewModel = (dbPupil: PupilType): PupilViewModel => {
 
 export const pupilsRouter = express.Router();
 
-pupilsRouter.get('/', (
+pupilsRouter.get('/', async (
     req: RequestWithQuery<QueryPupilModel>, 
     res: Response<PupilViewModel[]>
 ) => {
-    const foundPupils = pupilsRepository.findPupilsByName(req.query.name || null);
+    const foundPupils = await pupilsRepository.findPupilsByName(req.query.name || null);
 
     res.json(foundPupils.map(getPupilViewModel));
 })
 
-pupilsRouter.post('/', (
+pupilsRouter.post('/', async (
     req: RequestWithBody<InputPupilModel>, 
     res: Response<PupilViewModel>
 ) => {
@@ -36,7 +36,7 @@ pupilsRouter.post('/', (
         return;
     }
 
-    const createdPupil = pupilsRepository.createPupil(req.body.name);
+    const createdPupil = await pupilsRepository.createPupil(req.body.name);
 
     res.status(HTTP_STATUSES.CREATED).json(getPupilViewModel(createdPupil));
 });
@@ -45,8 +45,8 @@ pupilsRouter.delete(
     '/:id', 
     uriIdValidation,
     validationMiddleware,
-    (req: Request<URIParamIdModel>, res) => {
-        const isDeleted = pupilsRepository.removePupil(Number(req.params.id));
+    async (req: Request<URIParamIdModel>, res) => {
+        const isDeleted = await pupilsRepository.removePupil(Number(req.params.id));
 
         console.log('is deleted', isDeleted);
 
@@ -63,7 +63,7 @@ pupilsRouter.put(
     '/:id', 
     uriIdValidation,
     validationMiddleware,
-    (
+    async (
         req: Request<URIParamIdModel, InputPupilModel>, 
         res: Response<PupilViewModel>
     ) => {
@@ -72,8 +72,8 @@ pupilsRouter.put(
             return;
         }
 
-        const isUpdated = pupilsRepository.updatePupil(Number(req.params.id), req.body.name);
-        const newPupil = pupilsRepository.findPupilById(Number(req.params.id));
+        const isUpdated = await pupilsRepository.updatePupil(Number(req.params.id), req.body.name);
+        const newPupil = await pupilsRepository.findPupilById(Number(req.params.id));
 
         console.log(isUpdated, newPupil, req.params.id);
 
