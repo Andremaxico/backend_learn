@@ -87,8 +87,8 @@ pupilsRouter.put(
 )
 
 //__test__
-pupilsRouter.delete('/', (req, res) => {
-    const isRemoved = pupilsRepository.removeAllPupils();
+pupilsRouter.delete('/', async (req, res) => {
+    const isRemoved = await pupilsRepository.removeAllPupils();
 
     if(isRemoved) {
         res.sendStatus(HTTP_STATUSES.NO_CONTENT);

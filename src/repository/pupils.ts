@@ -1,23 +1,15 @@
-import { db } from "../db";
+import { db, pupilsCollection } from "../db";
 import { PupilType } from "../types";
 
 export const pupilsRepository = {
     async findPupilsByName(name: string | null): Promise<PupilType[]> {
-        let foundPupils = db.collection('pupils');
-
-        console.log('found Pupils', foundPupils);
-
-        if(name && foundPupils. > 0) {
-            foundPupils = foundPupils.filter(pupil => pupil.name.indexOf(name) > -1)
-        }
-
-        console.log('pupils found', foundPupils);
+        const foundPupils = await pupilsCollection.find(name ? {name: {$regexp: name}} : {}).toArray();
 
         return foundPupils;
     },
 
     async findPupilById(id: number): Promise<PupilType | null> {
-        const foundPupil = db.pupils.find(pupil => pupil.id === id) || null;
+        const foundPupil = await pupilsCollection.findOne({id});
         return foundPupil;
     },  
 
@@ -28,45 +20,31 @@ export const pupilsRepository = {
             positive: true,
         }
     
-        db.pupils.push(newPupil);
+        pupilsCollection.insertOne(newPupil);
 
         return newPupil;
     },
 
     async removePupil(id: number): Promise<boolean> {
-        const beforeDelLength = db.pupils.length;
+        const result = await pupilsCollection.deleteOne({id});
 
-        db.pupils = db.pupils.filter(pupil => pupil.id !== id);
-
-        return db.pupils.length < beforeDelLength;
+        return result.deletedCount === 1;
     },
 
     async updatePupil(id: number, name: string): Promise<boolean> {
-        const updatingPupil = db.pupils.find(pupil => pupil.id === id);
-
-        if(!updatingPupil) {
-            return false;
-        }
-
-        const updatingIdx = db.pupils.indexOf(updatingPupil);
-
-        if(updatingIdx < 0) {
-            return false;
-        }
-
         const newPupilData: PupilType = {
             id,
             name: name,
             positive: true,
         }
 
-        db.pupils[updatingIdx] = {...newPupilData};
+        const result = await pupilsCollection.updateOne({id}, {$set: newPupilData});
 
-        return true;
+        return result.acknowledged;
     },
 
-    removeAllPupils() {
-        db.pupils = [];
+    async removeAllPupils() {
+        const result = await pupilsCollection.deleteMany({});
 
         return true;
     }

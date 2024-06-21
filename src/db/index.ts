@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { DBType } from "../types";
+import { DBType, PupilType } from "../types";
 
 // export const db: DBType = {
 //     pupils: [],
@@ -9,11 +9,11 @@ import { DBType } from "../types";
 
 
 // Connection URL
-const url = 'mongodb://localhost:27017';
+const url = process.env.mongoURI || 'mongodb://localhost:27017';
 
 const client = new MongoClient(url);
 
-const connectDb = async () =>{
+export const connectDb = async () =>{
 
     let databasesList;
 
@@ -39,6 +39,4 @@ const connectDb = async () =>{
 }
 
 export const db = client.db('startDB');
-
-
-connectDb().catch(console.error);
+export const pupilsCollection = db.collection<PupilType>('pupils');
