@@ -3,26 +3,20 @@ import { PupilType } from "../types";
 
 export const pupilsRepository = {
     async findPupilsByName(name: string | null): Promise<PupilType[]> {
-        const foundPupils = await pupilsCollection.find(name ? {name: {$regexp: name}} : {}).toArray();
+        const foundPupilsData = await pupilsCollection.find(name ? {name: {$regexp: name}} : {}).toArray();
 
-        return foundPupils;
+        return foundPupilsData;
     },
 
     async findPupilById(id: number): Promise<PupilType | null> {
-        const foundPupil = await pupilsCollection.findOne({id});
-        return foundPupil;
+        const foundPupilData = await pupilsCollection.findOne({id});
+        return foundPupilData;
     },  
 
-    async createPupil(name: string): Promise<PupilType> {
-        const newPupil: PupilType = {
-            id: new Date().getTime(),
-            name: name,
-            positive: true,
-        }
-    
-        pupilsCollection.insertOne(newPupil);
+    async createPupil(newPupilData: PupilType): Promise<PupilType> {
+        pupilsCollection.insertOne(newPupilData);
 
-        return newPupil;
+        return newPupilData;
     },
 
     async removePupil(id: number): Promise<boolean> {
@@ -31,14 +25,9 @@ export const pupilsRepository = {
         return result.deletedCount === 1;
     },
 
-    async updatePupil(id: number, name: string): Promise<boolean> {
-        const newPupilData: PupilType = {
-            id,
-            name: name,
-            positive: true,
-        }
-
-        const result = await pupilsCollection.updateOne({id}, {$set: newPupilData});
+    async updatePupil(updatedPupilData: PupilType): Promise<boolean> {
+        const id = updatedPupilData.id;
+        const result = await pupilsCollection.updateOne({id}, {$set: updatedPupilData});
 
         return result.acknowledged;
     },

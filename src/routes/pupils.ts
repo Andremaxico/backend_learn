@@ -5,7 +5,7 @@ import { QueryPupilModel } from "../models/QueryPupilModel";
 import { URIParamIdModel } from "../models/URIParamIdModel";
 import { PupilType, RequestWithQuery, RequestWithBody, DBType } from "../types";
 import { HTTP_STATUSES } from "../constants";
-import { pupilsRepository } from "../repository/pupils";
+import { pupilsService } from "../repository/pupils";
 import { queryNameValidation, uriIdValidation, validationMiddleware } from "../middlewares.ts/pupils";
 import { validationResult } from "express-validator";
 
@@ -22,7 +22,7 @@ pupilsRouter.get('/', async (
     req: RequestWithQuery<QueryPupilModel>, 
     res: Response<PupilViewModel[]>
 ) => {
-    const foundPupils = await pupilsRepository.findPupilsByName(req.query.name || null);
+    const foundPupils = await pupilsService.findPupilsByName(req.query.name || null);
 
     res.json(foundPupils.map(getPupilViewModel));
 })
@@ -36,7 +36,7 @@ pupilsRouter.post('/', async (
         return;
     }
 
-    const createdPupil = await pupilsRepository.createPupil(req.body.name);
+    const createdPupil = await pupilsService.createPupil(req.body.name);
 
     res.status(HTTP_STATUSES.CREATED).json(getPupilViewModel(createdPupil));
 });
@@ -46,7 +46,7 @@ pupilsRouter.delete(
     uriIdValidation,
     validationMiddleware,
     async (req: Request<URIParamIdModel>, res) => {
-        const isDeleted = await pupilsRepository.removePupil(Number(req.params.id));
+        const isDeleted = await pupilsService.removePupil(Number(req.params.id));
 
         console.log('is deleted', isDeleted);
 
@@ -72,8 +72,8 @@ pupilsRouter.put(
             return;
         }
 
-        const isUpdated = await pupilsRepository.updatePupil(Number(req.params.id), req.body.name);
-        const newPupil = await pupilsRepository.findPupilById(Number(req.params.id));
+        const isUpdated = await pupilsService.updatePupil(Number(req.params.id), req.body.name);
+        const newPupil = await pupilsService.findPupilById(Number(req.params.id));
 
         console.log(isUpdated, newPupil, req.params.id);
 
@@ -88,7 +88,7 @@ pupilsRouter.put(
 
 //__test__
 pupilsRouter.delete('/', async (req, res) => {
-    const isRemoved = await pupilsRepository.removeAllPupils();
+    const isRemoved = await pupilsService.removeAllPupils();
 
     if(isRemoved) {
         res.sendStatus(HTTP_STATUSES.NO_CONTENT);
