@@ -5,9 +5,10 @@ import { QueryPupilModel } from "../models/QueryPupilModel";
 import { URIParamIdModel } from "../models/URIParamIdModel";
 import { PupilType, RequestWithQuery, RequestWithBody, DBType } from "../types";
 import { HTTP_STATUSES } from "../constants";
-import { pupilsService } from "../repository/pupils";
-import { queryNameValidation, uriIdValidation, validationMiddleware } from "../middlewares.ts/pupils";
+import { pupilsService } from "../domain/pupils-service";
+import { queryNameValidation, uriIdValidation } from "../middlewares.ts/pupils";
 import { validationResult } from "express-validator";
+import { validationMiddleware } from "../utils/middlewares/validationMiddleware";
 
 const getPupilViewModel = (dbPupil: PupilType): PupilViewModel => {
     return ({

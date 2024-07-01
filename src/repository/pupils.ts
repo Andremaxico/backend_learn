@@ -2,6 +2,7 @@ import { db, pupilsCollection } from "../db";
 import { PupilType } from "../types";
 
 export const pupilsRepository = {
+
     async findPupilsByName(name: string | null): Promise<PupilType[]> {
         const foundPupilsData = await pupilsCollection.find(name ? {name: {$regexp: name}} : {}).toArray();
 

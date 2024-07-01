@@ -15,3 +15,11 @@ export type PupilType = {
     id: number,
     positive: boolean,
 }
+
+export type UserDBType = {
+    passwordHash: string,
+    id: string,
+    username: string,
+    email: string,
+    createdAt: Date,
+}

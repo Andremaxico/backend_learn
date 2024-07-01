@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { DBType, PupilType } from "../types";
+import { DBType, PupilType, UserDBType } from "../types";
 
 // export const db: DBType = {
 //     pupils: [],
@@ -40,3 +40,4 @@ export const connectDb = async () =>{
 
 export const db = client.db('startDB');
 export const pupilsCollection = db.collection<PupilType>('pupils');
+export const usersCollection  = db.collection<UserDBType>('users');

@@ -3,6 +3,10 @@ import { InputPupilModel } from "../../src/models/InputPupilModel";
 import { app } from "../../src/app";
 import { PupilType } from "../../src/types";
 import { HTTP_STATUSES } from "../../src/constants";
+import { InputLoginModel } from "../../src/models/InputLoginModel";
+import { UserViewModel } from "../../src/models/UserViewModel";
+
+jest.useFakeTimers();
 
 describe('all endpoints', () => {
     beforeAll( async () => {
@@ -172,5 +176,17 @@ describe('all endpoints', () => {
         await request(app)
             .get('/schools')
             .expect(HTTP_STATUSES.OK, '"[]"');
+    })
+
+    it('should add new user', async () => {
+        const data: InputLoginModel = {
+            password: '123',
+            loginOrEmail: 'lolo',
+        }
+
+        await request(app)
+            .post('/users/login')
+            .send(data)
+            .expect(200);
     })
 })
