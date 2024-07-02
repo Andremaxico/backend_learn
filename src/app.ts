@@ -6,6 +6,7 @@ import { validationResult } from 'express-validator';
 import { HTTP_STATUSES } from './constants';
 import { MongoClient } from 'mongodb';
 import e from 'express';
+import { usersRouter } from './routes/users';
 
 export const app = express();
 
@@ -22,4 +23,5 @@ app.use(reqBodyMiddleware);
 
 //app.use('/schools', getSchoolsRouter(db));
 app.use('/pupils', pupilsRouter);
+app.use('/users', usersRouter);
 

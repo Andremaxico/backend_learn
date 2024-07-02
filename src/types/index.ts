@@ -12,7 +12,7 @@ export type DBType = {
 
 export type PupilType = {
     name: string, 
-    id: number,
+    id: string,
     positive: boolean,
 }
 

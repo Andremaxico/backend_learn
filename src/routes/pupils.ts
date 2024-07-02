@@ -6,8 +6,8 @@ import { URIParamIdModel } from "../models/URIParamIdModel";
 import { PupilType, RequestWithQuery, RequestWithBody, DBType } from "../types";
 import { HTTP_STATUSES } from "../constants";
 import { pupilsService } from "../domain/pupils-service";
-import { queryNameValidation, uriIdValidation } from "../middlewares.ts/pupils";
-import { validationResult } from "express-validator";
+import { bodyNameValidation, queryNameValidation, uriIdValidation } from "../middlewares.ts/pupils";
+import { body, validationResult } from "express-validator";
 import { validationMiddleware } from "../utils/middlewares/validationMiddleware";
 
 const getPupilViewModel = (dbPupil: PupilType): PupilViewModel => {
@@ -28,15 +28,14 @@ pupilsRouter.get('/', async (
     res.json(foundPupils.map(getPupilViewModel));
 })
 
-pupilsRouter.post('/', async (
+pupilsRouter.post(
+    '/', 
+    bodyNameValidation,
+    validationMiddleware,
+    async (
     req: RequestWithBody<InputPupilModel>, 
     res: Response<PupilViewModel>
 ) => {
-    if(!req.body.name || req.body.name.trim().length < 1){
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST);
-        return;
-    }
-
     const createdPupil = await pupilsService.createPupil(req.body.name);
 
     res.status(HTTP_STATUSES.CREATED).json(getPupilViewModel(createdPupil));
@@ -47,7 +46,7 @@ pupilsRouter.delete(
     uriIdValidation,
     validationMiddleware,
     async (req: Request<URIParamIdModel>, res) => {
-        const isDeleted = await pupilsService.removePupil(Number(req.params.id));
+        const isDeleted = await pupilsService.removePupil(req.params.id);
 
         console.log('is deleted', isDeleted);
 
@@ -63,18 +62,14 @@ pupilsRouter.delete(
 pupilsRouter.put(
     '/:id', 
     uriIdValidation,
+    body('name').trim().notEmpty(),
     validationMiddleware,
     async (
         req: Request<URIParamIdModel, InputPupilModel>, 
         res: Response<PupilViewModel>
     ) => {
-        if(!req.params.id || !req.body.name || req.body.name.trim().length < 1){
-            res.sendStatus(HTTP_STATUSES.BAD_REQUEST);
-            return;
-        }
-
-        const isUpdated = await pupilsService.updatePupil(Number(req.params.id), req.body.name);
-        const newPupil = await pupilsService.findPupilById(Number(req.params.id));
+        const isUpdated = await pupilsService.updatePupil(req.params.id, req.body.name);
+        const newPupil = await pupilsService.findPupilById(req.params.id);
 
         console.log(isUpdated, newPupil, req.params.id);
 
@@ -94,4 +89,4 @@ pupilsRouter.delete('/', async (req, res) => {
     if(isRemoved) {
         res.sendStatus(HTTP_STATUSES.NO_CONTENT);
     }
-})
+});

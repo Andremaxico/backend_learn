@@ -9,18 +9,18 @@ export const pupilsRepository = {
         return foundPupilsData;
     },
 
-    async findPupilById(id: number): Promise<PupilType | null> {
+    async findPupilById(id: string): Promise<PupilType | null> {
         const foundPupilData = await pupilsCollection.findOne({id});
         return foundPupilData;
     },  
 
     async createPupil(newPupilData: PupilType): Promise<PupilType> {
-        pupilsCollection.insertOne(newPupilData);
+        await pupilsCollection.insertOne(newPupilData);
 
         return newPupilData;
     },
 
-    async removePupil(id: number): Promise<boolean> {
+    async removePupil(id: string): Promise<boolean> {
         const result = await pupilsCollection.deleteOne({id});
 
         return result.deletedCount === 1;
@@ -36,6 +36,6 @@ export const pupilsRepository = {
     async removeAllPupils() {
         const result = await pupilsCollection.deleteMany({});
 
-        return true;
+        return result.acknowledged;
     }
 }

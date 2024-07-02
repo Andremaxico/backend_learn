@@ -9,7 +9,7 @@ import { DBType, PupilType, UserDBType } from "../types";
 
 
 // Connection URL
-const url = process.env.mongoURI || 'mongodb://localhost:27017';
+const url = process.env.mongoURI || 'mongodb://0.0.0.0:27017';
 
 const client = new MongoClient(url);
 

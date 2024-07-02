@@ -2,7 +2,7 @@ export type PupilViewModel = {
     /**
      * unique id of pupil
      */
-    id: number, 
+    id: string, 
     /**
      * name of existing pupil
      */
