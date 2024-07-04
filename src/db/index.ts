@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 import { DBType, PupilType, UserDBType } from "../types";
+import { settings } from "../settings";
 
 // export const db: DBType = {
 //     pupils: [],
@@ -9,7 +10,7 @@ import { DBType, PupilType, UserDBType } from "../types";
 
 
 // Connection URL
-const url = process.env.mongoURI || 'mongodb://0.0.0.0:27017';
+const url = settings.MONGO_URI;
 
 const client = new MongoClient(url);
 

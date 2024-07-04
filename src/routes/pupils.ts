@@ -6,7 +6,7 @@ import { URIParamIdModel } from "../models/URIParamIdModel";
 import { PupilType, RequestWithQuery, RequestWithBody, DBType } from "../types";
 import { HTTP_STATUSES } from "../constants";
 import { pupilsService } from "../domain/pupils-service";
-import { bodyNameValidation, queryNameValidation, uriIdValidation } from "../middlewares.ts/pupils";
+import { bodyNameValidation, queryNameValidation, uriIdValidation } from "../middlewares/pupils";
 import { body, validationResult } from "express-validator";
 import { validationMiddleware } from "../utils/middlewares/validationMiddleware";
 

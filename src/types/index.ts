@@ -23,3 +23,5 @@ export type UserDBType = {
     email: string,
     createdAt: Date,
 }
+
+export type JWTTokenType = string;
