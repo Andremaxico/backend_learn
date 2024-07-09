@@ -216,7 +216,7 @@ describe('all endpoints', () => {
             .post('/users/login')
             .send(data)
             .expect(HTTP_STATUSES.OK);
-    })
+    }, 20000)
 
     it('should not return user data when logging in', async () => {
         const data: InputLoginModel = {
@@ -241,4 +241,11 @@ describe('all endpoints', () => {
             .send(data)
             .expect(HTTP_STATUSES.BAD_REQUEST);
     })
+
+    it('should return 201 satus after sending email', async () => {
+        await request(app)
+            .post('/email/send_welcoming')
+            .send({email: 'bestthebeschan@gmail.com'})
+            .expect(HTTP_STATUSES.CREATED);
+    }, 20000)
 })

@@ -25,3 +25,11 @@ export type UserDBType = {
 }
 
 export type JWTTokenType = string;
+export type SettingsType = {
+    [index: string]: string,
+}
+export type SettingsObjType = {
+    _settings: SettingsType,
+    getSettings: () => SettingsType,
+    setSettings: (data: SettingsType) => void,
+}

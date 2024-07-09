@@ -45,7 +45,7 @@ pupilsRouter.delete(
     '/:id', 
     uriIdValidation,
     validationMiddleware,
-    async (req: Request<URIParamIdModel>, res) => {
+    async (req: Request<URIParamIdModel>, res: Response) => {
         const isDeleted = await pupilsService.removePupil(req.params.id);
 
         console.log('is deleted', isDeleted);
