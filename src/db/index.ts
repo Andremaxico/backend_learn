@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { DBType, PupilType, UserDBType } from "../types";
-import { settings } from "../settings";
+import { settingsObj } from "../settings";
 
 // export const db: DBType = {
 //     pupils: [],
@@ -10,7 +10,9 @@ import { settings } from "../settings";
 
 
 // Connection URL
-const url = settings.MONGO_URI;
+const url = settingsObj.getSettings().MONGO_URI || 'mongodb://0.0.0.0:27017';
+
+console.log('url', url);
 
 const client = new MongoClient(url);
 
@@ -30,13 +32,14 @@ export const connectDb = async () =>{
         await client.connect();
  
         // Make the appropriate DB calls
-        await  listDatabases(client);
+        await listDatabases(client);
  
     } catch (e) {
         console.error(e);
-    } finally {
-        await client.close();
-    }
+    } 
+    // finally {
+    //     await client.close();
+    // }
 }
 
 export const db = client.db('startDB');

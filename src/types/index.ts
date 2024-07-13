@@ -22,6 +22,11 @@ export type UserDBType = {
     username: string,
     email: string,
     createdAt: Date,
+    emailConfirmation: {
+        code: string, 
+        expirationDate: Date,
+        isConfirmed: boolean,
+    }
 }
 
 export type JWTTokenType = string;

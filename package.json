@@ -1,10 +1,12 @@
 {
   "dependencies": {
+    "@types/date-fns": "^2.6.0",
     "@types/dotenv": "^8.2.0",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/uuid": "^10.0.0",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
+    "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-validator": "^7.1.0",

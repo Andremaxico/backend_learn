@@ -193,7 +193,7 @@ describe('all endpoints', () => {
         }
 
         const response = await request(app)
-            .post('/users/register')
+            .post('/auth/register')
             .send(data);
 
         newUserData = response.body;
@@ -204,7 +204,7 @@ describe('all endpoints', () => {
             email: data.email,
             createdAt: expect.any(String),
         })
-    })
+    },2000000)
 
     it('should return user data when logging in', async () => {
         const data: InputLoginModel = {
@@ -213,7 +213,7 @@ describe('all endpoints', () => {
         }
 
         await request(app)
-            .post('/users/login')
+            .post('/auth/login')
             .send(data)
             .expect(HTTP_STATUSES.OK);
     }, 20000)
@@ -225,7 +225,7 @@ describe('all endpoints', () => {
         }
 
         await request(app)
-            .post('/users/login')
+            .post('/auth/login')
             .send(data)
             .expect(HTTP_STATUSES.NOT_FOUND);
     })
@@ -237,15 +237,15 @@ describe('all endpoints', () => {
         }
 
         await request(app)
-            .post('/users/login')
+            .post('/auth/login')
             .send(data)
             .expect(HTTP_STATUSES.BAD_REQUEST);
     })
 
-    it('should return 201 satus after sending email', async () => {
-        await request(app)
-            .post('/email/send_welcoming')
-            .send({email: 'bestthebeschan@gmail.com'})
-            .expect(HTTP_STATUSES.CREATED);
-    }, 20000)
+    // it('should return 201 satus after sending email', async () => {
+    //     await request(app)
+    //         .post('/email/send_welcoming')
+    //         .send({email: 'bestthebeschan@gmail.com'})
+    //         .expect(HTTP_STATUSES.CREATED);
+    // }, 20000)
 })

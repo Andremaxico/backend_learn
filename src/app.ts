@@ -9,6 +9,7 @@ import e from 'express';
 import { usersRouter } from './routes/users';
 import { emailRouter } from './routes/email';
 import bodyParser from 'body-parser';
+import { authRouter } from './routes/auth';
 
 export const app = express();
 
@@ -30,4 +31,5 @@ app.use(bodyParser.urlencoded({
 app.use('/pupils', pupilsRouter);
 app.use('/users', usersRouter);
 app.use('/email', emailRouter);
+app.use('/auth', authRouter);
 
